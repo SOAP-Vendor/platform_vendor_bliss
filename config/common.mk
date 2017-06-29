@@ -1,8 +1,8 @@
 # Brand
-PRODUCT_BRAND ?= bliss
+PRODUCT_BRAND ?= soap
 
 # Local path for prebuilts
-LOCAL_PATH:= vendor/bliss/prebuilt/common
+LOCAL_PATH:= vendor/soap/prebuilt/common
 
 # Common build prop overrides 
 PRODUCT_PROPERTY_OVERRIDES += \
