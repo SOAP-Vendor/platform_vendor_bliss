@@ -25,7 +25,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.dun.override=0
 
 # Common overlays
-PRODUCT_PACKAGE_OVERLAYS += vendor/bliss/overlay/common
+PRODUCT_PACKAGE_OVERLAYS += vendor/soap/overlay/common
 
 # Proprietary latinime lib needed for swyping
 PRODUCT_COPY_FILES += \
@@ -53,7 +53,7 @@ TARGET_BOOTANIMATION_SIZE := $(shell \
   fi )
 
 # get a sorted list of the sizes
-bootanimation_sizes := $(subst .zip,, $(shell ls vendor/bliss/prebuilt/common/bootanimation))
+bootanimation_sizes := $(subst .zip,, $(shell ls vendor/soap/prebuilt/common/bootanimation))
 bootanimation_sizes := $(shell echo -e $(subst $(space),'\n',$(bootanimation_sizes)) | sort -rn)
 
 # find the appropriate size and set
@@ -71,9 +71,9 @@ endef
 $(foreach size,$(bootanimation_sizes), $(call check_and_set_bootanimation,$(size)))
 
 ifeq ($(TARGET_BOOTANIMATION_HALF_RES),true)
-PRODUCT_BOOTANIMATION := vendor/bliss/prebuilt/common/bootanimation/halfres/$(TARGET_BOOTANIMATION_NAME).zip
+PRODUCT_BOOTANIMATION := vendor/soap/prebuilt/common/bootanimation/halfres/$(TARGET_BOOTANIMATION_NAME).zip
 else
-PRODUCT_BOOTANIMATION := vendor/bliss/prebuilt/common/bootanimation/$(TARGET_BOOTANIMATION_NAME).zip
+PRODUCT_BOOTANIMATION := vendor/soap/prebuilt/common/bootanimation/$(TARGET_BOOTANIMATION_NAME).zip
 endif
 
 PRODUCT_COPY_FILES += \
@@ -81,42 +81,22 @@ PRODUCT_COPY_FILES += \
 
 endif
 
-# Bliss OTA
--include vendor/bliss/config/bliss_ota.mk
-
-#Bliss Versioning System
--include vendor/bliss/config/versions.mk
+#SOAP Versioning System
+-include vendor/soap/config/versions.mk
 
 # Backup Tool
 PRODUCT_COPY_FILES += \
-    vendor/bliss/prebuilt/bin/backuptool.sh:system/bin/backuptool.sh \
-    vendor/bliss/prebuilt/bin/backuptool.functions:system/bin/backuptool.functions \
-    vendor/bliss/prebuilt/bin/50-hosts.sh:system/addon.d/50-hosts.sh \
-    vendor/bliss/prebuilt/bin/blacklist:system/addon.d/blacklist
+    vendor/soap/prebuilt/bin/backuptool.sh:system/bin/backuptool.sh \
+    vendor/soap/prebuilt/bin/backuptool.functions:system/bin/backuptool.functions \
+    vendor/soap/prebuilt/bin/50-hosts.sh:system/addon.d/50-hosts.sh \
+    vendor/soap/prebuilt/bin/blacklist:system/addon.d/blacklist
 
-# Bliss Custom Apps
+# SOAP Custom Apps
 PRODUCT_PACKAGES += \
-ThemeInterfacer \
-BlissOTA
+ThemeInterfacer 
 
-# libs for BlissOTA
-ifneq ($(filter arm64,$(TARGET_ARCH)),)
-PRODUCT_COPY_FILES +=\
-    vendor/bliss/prebuilt/common/lib/libbypass.so:system/lib/libbypass.so
-else
-PRODUCT_COPY_FILES += \
-    vendor/bliss/prebuilt/common/lib64/libbypass.so:system/lib64/libbypass.so
 endif
 
-ifeq ($(DEFAULT_ROOT_METHOD),magisk)
-PRODUCT_COPY_FILES += \
-    vendor/bliss/prebuilt/zip/magisk.zip:system/addon.d/magisk.zip
-
-else ifeq ($(DEFAULT_ROOT_METHOD),supersu)
-PRODUCT_COPY_FILES += \
-    vendor/bliss/prebuilt/zip/supersu.zip:system/addon.d/supersu.zip \
-    vendor/bliss/prebuilt/etc/99SuperSUDaemon:system/etc/init.d/99SuperSUDaemon
-endif
 
 $(call inherit-product-if-exists, vendor/bliss/prebuilt/common/app/Android.mk)
 $(call inherit-product-if-exists, vendor/bliss/prebuilt/common/privapp/Android.mk)
